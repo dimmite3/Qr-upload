@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Metti su tela</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --card:#121a24;
+      --text:#eaf0ff;
+      --muted:rgba(234,240,255,.78);
+      --line:rgba(255,255,255,.10);
+      --primary:#2b7cff;
+      --secondary:#1b2634;
+      --ok:#21c55d;
+      --danger:#ef4444;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);}
+    a{color:inherit}
+    .wrap{max-width:860px;margin:0 auto;padding:18px;}
+    .top{
+      display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px;
+    }
+    .brand{
+      display:flex;flex-direction:column;gap:2px;
+    }
+    .brand h1{margin:0;font-size:22px;letter-spacing:.2px}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+    .pill{
+      border:1px solid var(--line);background:rgba(255,255,255,.04);
+      padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted);
+      white-space:nowrap;
+    }
+    .grid{display:grid;gap:12px}
+    @media(min-width:720px){ .grid-2{grid-template-columns:1fr 1fr} }
+    .card{
+      background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;
+      box-shadow:0 8px 24px rgba(0,0,0,.25);
+    }
+    .card h2{margin:0 0 6px;font-size:18px}
+    .card p{margin:0;color:var(--muted);line-height:1.5}
+    .btns{display:grid;gap:10px;margin-top:12px}
+    .btn{
+      display:block;text-decoration:none;text-align:center;
+      padding:14px 12px;border-radius:14px;font-weight:800;letter-spacing:.2px;
+      border:1px solid transparent;
+    }
+    .btn.primary{background:var(--primary);color:#fff}
+    .btn.secondary{background:var(--secondary);border-color:var(--line);color:var(--text)}
+    .btn.ghost{background:transparent;border-color:var(--line);color:var(--text)}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;font-size:12px;
+      background:rgba(43,124,255,.12);border:1px solid rgba(43,124,255,.25);
+      color:rgba(234,240,255,.9);
+      margin-top:10px;
+    }
+    .divider{height:1px;background:var(--line);margin:14px 0}
+    label{display:block;margin:10px 0 6px;font-weight:700;font-size:13px}
+    input,select,textarea{
+      width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);
+      background:#0b0f14;color:var(--text);outline:none;
+    }
+    textarea{min-height:92px;resize:vertical}
+    .row{display:grid;gap:10px}
+    @media(min-width:720px){ .row-2{grid-template-columns:1fr 1fr} }
+    .hint{font-size:12px;color:rgba(234,240,255,.65);margin-top:8px;line-height:1.4}
+    .small{font-size:12px;color:rgba(234,240,255,.60);margin-top:10px;line-height:1.4}
+    .hidden{display:none !important}
+    .success{
+      border:1px solid rgba(33,197,93,.25);
+      background:rgba(33,197,93,.10);
+      color:rgba(234,240,255,.92);
+    }
+    .kv{display:grid;gap:8px;margin-top:12px}
+    .kv div{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted);padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.03)}
+    .kv b{color:var(--text)}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- HEADER -->
+    <div class="top">
+      <div class="brand">
+        <h1>Metti su tela</h1>
+        <p>Carica una foto e ricevi l’anteprima dell’opera. Scegli il percorso.</p>
+      </div>
+      <div class="pill">QR • Mobile-first • Zero costi</div>
+    </div>
+
+    <!-- SCELTA PERCORSO -->
+    <div class="grid grid-2">
+      <div class="card" id="cardToscana">
+        <h2>La tua esperienza toscana</h2>
+        <p>Trasformiamo una tua foto di viaggio in una tela artistica. Indica luogo e atmosfera desiderata.</p>
+        <div class="badge">Ideale per: borghi, panorami, ricordi di viaggio</div>
+        <div class="btns">
+          <a class="btn primary" href="#form" onclick="setBranch('toscana')">Scegli “Esperienza Toscana”</a>
+        </div>
+      </div>
+
+      <div class="card" id="cardPet">
+        <h2>Il tuo amico a 4 zampe</h2>
+        <p>Ritratto su tela del tuo cane o gatto. Indica nome, stile e dettagli (collare, accessori, ecc.).</p>
+        <div class="badge">Ideale per: cani, gatti, ritratti emozionali</div>
+        <div class="btns">
+          <a class="btn primary" href="#form" onclick="setBranch('pet')">Scegli “Amico a 4 Zampe”</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="card" id="form" style="margin-top:12px;">
+      <h2>Carica la tua foto</h2>
+      <p id="formSubtitle">Seleziona un percorso qui sopra. Poi compila e invia.</p>
+
+      <div class="divider"></div>
+
+      <!--
+        FORM SUBMIT:
+        - Sostituisci TUAEMAIL@example.com con la tua email
+        - La prima volta FormSubmit ti chiede conferma via email (gratis)
+      -->
+      <form id="uploadForm"
+        action="https://formsubmit.co/TUAEMAIL@example.com"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <!-- settings FormSubmit -->
+        <input type="hidden" name="_captcha" value="false">
+        <!-- Ritorno alla stessa pagina con #thanks -->
+        <input type="hidden" name="_next" value="./#thanks">
+
+        <!-- Campo nascosto per sapere quale percorso -->
+        <input type="hidden" id="branchField" name="Percorso" value="">
+
+        <div class="row row-2">
+          <div>
+            <label>Nome e cognome</label>
+            <input name="Nome" placeholder="Es. Mario Rossi" required />
+          </div>
+          <div>
+            <label>Telefono (WhatsApp)</label>
+            <input name="Telefono" placeholder="Es. 333 111 2222" required />
+          </div>
+        </div>
+
+        <div class="row row-2">
+          <div>
+            <label>Email</label>
+            <input type="email" name="Email" placeholder="Es. nome@email.com" required />
+          </div>
+          <div>
+            <label>Formato desiderato</label>
+            <select name="Formato">
+              <option value="Non so / Consigliami">Non so / Consigliami</option>
+              <option value="20x30">20x30</option>
+              <option value="30x40">30x40</option>
+              <option value="40x60">40x60</option>
+              <option value="50x70">50x70</option>
+              <option value="Altro">Altro</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Carica foto (1 file)</label>
+        <input type="file" name="Foto" accept="image/*" required />
+
+        <!-- Sezione Toscana -->
+        <div id="toscanaFields" class="hidden">
+          <div class="divider"></div>
+          <h2 style="font-size:16px;margin:0 0 6px;">Dettagli: Esperienza Toscana</h2>
+          <p style="margin:0;color:var(--muted);line-height:1.5;">
+            Inserisci luogo e l’atmosfera che vuoi ottenere sulla tela.
+          </p>
+
+          <div class="row row-2" style="margin-top:10px;">
+            <div>
+              <label>Luogo (borgo/città)</label>
+              <input name="Luogo" placeholder="Es. Pitigliano, Siena..." />
+            </div>
+            <div>
+              <label>Stagione / Momento</label>
+              <select name="Stagione">
+                <option value="">Seleziona (opzionale)</option>
+                <option>Primavera</option>
+                <option>Estate</option>
+                <option>Autunno</option>
+                <option>Inverno</option>
+                <option>Tramonto</option>
+                <option>Notte</option>
+              </select>
+            </div>
+          </div>
+
+          <label>Atmosfera desiderata</label>
+          <textarea name="Atmosfera" placeholder="Es. colori caldi, vibe vintage, look cinematografico, più pittorico..."></textarea>
+        </div>
+
+        <!-- Sezione Pet -->
+        <div id="petFields" class="hidden">
+          <div class="divider"></div>
+          <h2 style="font-size:16px;margin:0 0 6px;">Dettagli: Amico a 4 Zampe</h2>
+          <p style="margin:0;color:var(--muted);line-height:1.5;">
+            Inserisci nome dell’animale e le preferenze di stile.
+          </p>
+
+          <div class="row row-2" style="margin-top:10px;">
+            <div>
+              <label>Nome dell’animale</label>
+              <input name="Nome animale" placeholder="Es. Luna" />
+            </div>
+            <div>
+              <label>Tipo</label>
+              <select name="Tipo animale">
+                <option value="">Seleziona (opzionale)</option>
+                <option>Cane</option>
+                <option>Gatto</option>
+                <option>Altro</option>
+              </select>
+            </div>
+          </div>
+
+          <label>Stile preferito</label>
+          <select name="Stile">
+            <option value="Consigliami">Consigliami</option>
+            <option value="Ritratto realistico">Ritratto realistico</option>
+            <option value="Artistico / pittorico">Artistico / pittorico</option>
+            <option value="Pop / colorato">Pop / colorato</option>
+            <option value="Minimal / elegante">Minimal / elegante</option>
+          </select>
+
+          <label>Dettagli (collare, accessori, sfondo)</label>
+          <textarea name="Dettagli pet" placeholder="Es. collare rosso, sfondo neutro, far risaltare gli occhi..."></textarea>
+        </div>
+
+        <label>Note extra</label>
+        <textarea name="Note" placeholder="Qualsiasi cosa utile: preferenze, richieste, urgenze..."></textarea>
+
+        <div class="hint">
+          Dopo l’invio riceverai una risposta con l’anteprima dell’opera e i prossimi step.
+        </div>
+
+        <div class="btns" style="margin-top:14px;">
+          <button type="submit" class="btn primary" style="border:0;cursor:pointer;">Invia richiesta</button>
+
+          <!-- Sostituisci il numero WhatsApp (formato internazionale senza +) -->
+          <a class="btn secondary" id="waBtn"
+            href="https://wa.me/393470889978?text=Ciao!%20Ho%20scansionato%20il%20QR%20e%20vorrei%20mettere%20su%20tela%20una%20foto.%20Percorso:%20"
+            target="_blank" rel="noopener">
+            Scrivici su WhatsApp
+          </a>
+        </div>
+
+        <div class="small">
+          Privacy: aggiungi qui il link alla tua privacy policy quando ce l’hai.
+        </div>
+      </form>
+    </div>
+
+    <!-- THANK YOU -->
+    <div id="thanks" class="card success" style="margin-top:12px;">
+      <h2 style="margin:0 0 6px;">Richiesta inviata</h2>
+      <p style="margin:0;color:rgba(234,240,255,.85);line-height:1.5;">
+        Perfetto. Abbiamo ricevuto la tua richiesta. Se vuoi accelerare, scrivici su WhatsApp indicando il percorso scelto.
+      </p>
+
+      <div class="kv">
+        <div><span>Prossimo step</span><b>Ti rispondiamo con anteprima</b></div>
+        <div><span>Consiglio</span><b>Invia dettagli su WhatsApp</b></div>
+      </div>
+
+      <div class="btns" style="margin-top:12px;">
+        <a class="btn primary" id="waBtnThanks"
+           href="https://wa.me/393470889978?text=Ciao!%20Ho%20appena%20inviato%20la%20richiesta%20dal%20QR.%20Percorso:%20"
+           target="_blank" rel="noopener">
+          Apri WhatsApp
+        </a>
+        <a class="btn ghost" href="./#form">Invia un’altra foto</a>
+      </div>
+    </div>
+
+    <div class="small" style="margin-top:12px;">
+      Nota tecnica: FormSubmit è gratuito e funziona senza backend, ma la prima volta dovrai confermare la tua email per ricevere i messaggi.
+    </div>
+
+  </div>
+
+  <script>
+    // Imposta percorso e mostra i campi corretti
+    function setBranch(branch){
+      const branchField = document.getElementById('branchField');
+      const sub = document.getElementById('formSubtitle');
+      const tosc = document.getElementById('toscanaFields');
+      const pet = document.getElementById('petFields');
+
+      branchField.value = (branch === 'toscana')
+        ? 'La tua esperienza toscana'
+        : 'Il tuo amico a 4 zampe';
+
+      if(branch === 'toscana'){
+        tosc.classList.remove('hidden');
+        pet.classList.add('hidden');
+        sub.textContent = 'Percorso selezionato: Esperienza Toscana. Ora carica la foto e compila i dettagli.';
+      } else {
+        pet.classList.remove('hidden');
+        tosc.classList.add('hidden');
+        sub.textContent = 'Percorso selezionato: Amico a 4 Zampe. Ora carica la foto e compila i dettagli.';
+      }
+
+      // aggiorna link WhatsApp con percorso
+      const msg = encodeURIComponent('' + branchField.value);
+      document.getElementById('waBtn').href =
+        'https://wa.me/393470889978?text=' +
+        encodeURIComponent('Ciao! Ho scansionato il QR e vorrei mettere su tela una foto. Percorso: ') + msg;
+
+      document.getElementById('waBtnThanks').href =
+        'https://wa.me/393470889978?text=' +
+        encodeURIComponent('Ciao! Ho appena inviato la richiesta dal QR. Percorso: ') + msg;
+    }
+
+    // Se arrivo su #thanks, provo a leggere il percorso dall'URL (se presente)
+    // (non indispensabile: WhatsApp si aggiorna quando selezioni un percorso)
+  </script>
+</body>
+</html>
